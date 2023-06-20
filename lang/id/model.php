@@ -40,6 +40,7 @@ return [
         'email' => 'Surel',
         'password' => 'Kata Sandi',
         'phone' => 'Nomor Telepon',
+        'position' => 'Jabatan',
         'role' => 'Peran',
         'is_active' => 'Masih Aktif?',
         'picture' => 'Foto Profil',

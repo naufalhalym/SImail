@@ -38,6 +38,7 @@
                     <th>{{ __('model.user.name') }}</th>
                     <th>{{ __('model.user.email') }}</th>
                     <th>{{ __('model.user.phone') }}</th>
+                    <th>{{ __('model.user.position') }}</th>
                     <th>{{ __('model.user.is_active') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
                 </tr>
@@ -58,6 +59,7 @@
                                         data-name="{{ $user->name }}"
                                         data-email="{{ $user->email }}"
                                         data-phone="{{ $user->phone }}"
+                                        data-position="{{ $user->position }}"
                                         data-active="{{ $user->is_active }}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editModal">
@@ -87,6 +89,7 @@
                     <th>{{ __('model.user.name') }}</th>
                     <th>{{ __('model.user.email') }}</th>
                     <th>{{ __('model.user.phone') }}</th>
+                    <th>{{ __('model.user.position') }}</th>
                     <th>{{ __('model.user.is_active') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
                 </tr>
@@ -115,6 +118,7 @@
                     <x-input-form name="name" :label="__('model.user.name')"/>
                     <x-input-form name="email" :label="__('model.user.email')" type="email"/>
                     <x-input-form name="phone" :label="__('model.user.phone')"/>
+                    <x-input-form name="position" :label="__('model.user.position')"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">

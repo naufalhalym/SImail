@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@admin.com',
             'phone' => '082121212121',
+            'position' => 'Admin',
             'password' => Hash::make('admin'),
             'role' => Role::ADMIN->status(),
         ]);

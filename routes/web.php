@@ -44,17 +44,17 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('{letter}/disposition', \App\Http\Controllers\DispositionController::class)->except(['show']);
     });
 
-    Route::prefix('agenda')->as('agenda.')->group(function () {
-        Route::get('incoming', [\App\Http\Controllers\IncomingLetterController::class, 'agenda'])->name('incoming');
-        Route::get('incoming/print', [\App\Http\Controllers\IncomingLetterController::class, 'print'])->name('incoming.print');
-        Route::get('outgoing', [\App\Http\Controllers\OutgoingLetterController::class, 'agenda'])->name('outgoing');
-        Route::get('outgoing/print', [\App\Http\Controllers\OutgoingLetterController::class, 'print'])->name('outgoing.print');
-    });
+    // Route::prefix('agenda')->as('agenda.')->group(function () {
+    //     Route::get('incoming', [\App\Http\Controllers\IncomingLetterController::class, 'agenda'])->name('incoming');
+    //     Route::get('incoming/print', [\App\Http\Controllers\IncomingLetterController::class, 'print'])->name('incoming.print');
+    //     Route::get('outgoing', [\App\Http\Controllers\OutgoingLetterController::class, 'agenda'])->name('outgoing');
+    //     Route::get('outgoing/print', [\App\Http\Controllers\OutgoingLetterController::class, 'print'])->name('outgoing.print');
+    // });
 
-    Route::prefix('gallery')->as('gallery.')->group(function () {
-        Route::get('incoming', [\App\Http\Controllers\LetterGalleryController::class, 'incoming'])->name('incoming');
-        Route::get('outgoing', [\App\Http\Controllers\LetterGalleryController::class, 'outgoing'])->name('outgoing');
-    });
+    // Route::prefix('gallery')->as('gallery.')->group(function () {
+    //     Route::get('incoming', [\App\Http\Controllers\LetterGalleryController::class, 'incoming'])->name('incoming');
+    //     Route::get('outgoing', [\App\Http\Controllers\LetterGalleryController::class, 'outgoing'])->name('outgoing');
+    // });
 
     Route::prefix('reference')->as('reference.')->middleware(['role:admin'])->group(function () {
         Route::resource('classification', \App\Http\Controllers\ClassificationController::class)->except(['show', 'create', 'edit']);

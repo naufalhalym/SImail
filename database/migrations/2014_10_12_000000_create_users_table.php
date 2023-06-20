@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('role')->default('staff');
+            $table->string('position');
             $table->boolean('is_active')->default(true);
             $table->string('profile_picture')->nullable();
             $table->rememberToken();

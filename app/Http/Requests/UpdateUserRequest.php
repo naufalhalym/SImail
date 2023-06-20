@@ -16,7 +16,7 @@ class UpdateUserRequest extends FormRequest
     public function authorize(): bool
     {
         // return auth()->user()->role == Role::ADMIN->status() || $this->id == auth()->user()->id;
-        return true;    
+        return true;
     }
 
     /**
@@ -28,6 +28,7 @@ class UpdateUserRequest extends FormRequest
             'name' => __('model.user.name'),
             'email' => __('model.user.email'),
             'phone' => __('model.user.phone'),
+            'phone' => __('model.user.position'),
         ];
     }
 
@@ -43,6 +44,7 @@ class UpdateUserRequest extends FormRequest
             'email' => ['required', Rule::unique('users')->ignore($this->id)],
             'phone' => ['nullable'],
             'is_active' => ['nullable'],
+            'position' => ['nullable'],
         ];
     }
 }
