@@ -6,10 +6,27 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Disposition extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    //Function to get activity logs
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            -> logOnly(['text'])
+            -> logFillable()
+            -> useLogName('Dispositions');
+    }
+
+    //Function to track user is doing
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->name . " dispotition {$eventName} by " . Auth::user()->name;
+    }
 
     protected $fillable = [
         'to',

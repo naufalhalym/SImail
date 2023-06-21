@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreDispositionRequest;
-use App\Http\Requests\UpdateDispositionRequest;
-use App\Models\Disposition;
 use App\Models\Letter;
+use App\Models\Disposition;
 use App\Models\LetterStatus;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
+use App\Http\Requests\StoreDispositionRequest;
+use App\Http\Requests\UpdateDispositionRequest;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class DispositionController extends Controller
 {
@@ -57,6 +60,14 @@ class DispositionController extends Controller
             $newDisposition['user_id'] = auth()->user()->id;
             $newDisposition['letter_id'] = $letter->id;
             Disposition::create($newDisposition);
+
+            //creating the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'created'
+            $activity->subject; //returns the instance of NewsItem that was created
+            $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
+
             return redirect()
                 ->route('transaction.disposition.index', $letter)
                 ->with('success', __('menu.general.success'));
@@ -93,6 +104,13 @@ class DispositionController extends Controller
     {
         try {
             $disposition->update($request->validated());
+
+            //updating the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'updated'
+            $activity->subject; //returns the instance of NewsItem that was created
+
             return back()->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());
@@ -110,6 +128,13 @@ class DispositionController extends Controller
     {
         try {
             $disposition->delete();
+
+            //deleting the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'deleted'
+            $activity->changes; //returns ['attributes' => ['name' => 'updated name', 'text' => 'Lorum']];
+
             return back()->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());

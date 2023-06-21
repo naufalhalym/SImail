@@ -3,6 +3,7 @@
 return [
     'home' => 'Beranda',
     'users' => 'Kelola Pengguna',
+    'logs' => 'Aktivitas Log',
     'transaction' => [
         'menu' => 'Transaksi Surat',
         'incoming_letter' => 'Surat Masuk',

@@ -17,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\PageController::class, 'index'])->name('home');
 
     Route::resource('user', \App\Http\Controllers\UserController::class);
+    Route::resource('log', \App\Http\Controllers\LogController::class);
         // ->except(['show', 'edit', 'create'])
         // ->middleware(['role:admin', 'role:staff']);
 

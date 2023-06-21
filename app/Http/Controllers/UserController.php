@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Config as ConfigEnum;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Config;
 use App\Models\User;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Config;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use TheSeer\Tokenizer\Exception;
+use App\Enums\Config as ConfigEnum;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreUserRequest;
+use Spatie\Activitylog\Models\Activity;
+use App\Http\Requests\UpdateUserRequest;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -48,6 +51,14 @@ class UserController extends Controller
                 $newUser = $request->validated();
                 $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
                 User::create($newUser);
+
+                //creating the newsItem will cause an activity being logged
+                $activity = Activity::all()->last();
+
+                $activity->description; //returns 'created'
+                $activity->subject; //returns the instance of NewsItem that was created
+                $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
+
                 return back()->with('success', __('menu.general.success'));
             } catch (\Throwable $exception) {
                 return back()->with('error', $exception->getMessage());
@@ -74,6 +85,14 @@ class UserController extends Controller
                 if ($request->reset_password)
                     $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
                 $user->update($newUser);
+
+
+                //updating the newsItem will cause an activity being logged
+                $activity = Activity::all()->last();
+
+                $activity->description; //returns 'updated'
+                $activity->subject; //returns the instance of NewsItem that was created
+
                 return back()->with('success', __('menu.general.success'));
             } catch (\Throwable $exception) {
                 return back()->with('error', $exception->getMessage());
@@ -96,6 +115,13 @@ class UserController extends Controller
         if ($user->role === 'admin' || 'staff'){
             try {
                 $user->delete();
+
+                //deleting the newsItem will cause an activity being logged
+                $activity = Activity::all()->last();
+
+                $activity->description; //returns 'deleted'
+                $activity->changes; //returns ['attributes' => ['name' => 'updated name', 'text' => 'Lorum']];
+
                 return back()->with('success', __('menu.general.success'));
             } catch (\Throwable $exception) {
                 return back()->with('error', $exception->getMessage());

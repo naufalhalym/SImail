@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\LetterType;
-use App\Http\Requests\StoreLetterRequest;
-use App\Http\Requests\UpdateLetterRequest;
-use App\Models\Attachment;
-use App\Models\Classification;
 use App\Models\Config;
 use App\Models\Letter;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Enums\LetterType;
+use App\Models\Attachment;
 use Illuminate\Http\Request;
+use App\Models\Classification;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Spatie\Activitylog\Models\Activity;
+use App\Http\Requests\StoreLetterRequest;
+use App\Http\Requests\UpdateLetterRequest;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class OutgoingLetterController extends Controller
 {
@@ -110,6 +113,14 @@ class OutgoingLetterController extends Controller
                     ]);
                 }
             }
+
+            //creating the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'created'
+            $activity->subject; //returns the instance of NewsItem that was created
+            $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
+
             return redirect()
                 ->route('transaction.outgoing.index')
                 ->with('success', __('menu.general.success'));
@@ -171,6 +182,13 @@ class OutgoingLetterController extends Controller
                     ]);
                 }
             }
+
+            //updating the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'updated'
+            $activity->subject; //returns the instance of NewsItem that was created
+
             return back()->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());
@@ -187,6 +205,13 @@ class OutgoingLetterController extends Controller
     {
         try {
             $outgoing->delete();
+
+            //deleting the newsItem will cause an activity being logged
+            $activity = Activity::all()->last();
+
+            $activity->description; //returns 'deleted'
+            $activity->changes; //returns ['attributes' => ['name' => 'updated name', 'text' => 'Lorum']];
+
             return redirect()
                 ->route('transaction.outgoing.index')
                 ->with('success', __('menu.general.success'));

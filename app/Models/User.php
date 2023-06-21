@@ -10,10 +10,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, LogsActivity;
+
+    //Function to get activity logs
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            -> logOnly(['text'])
+            -> useLogName('Users')
+            -> logFillable();
+    }
+
+    //Function to track user is doing
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->name . " user {$eventName} by " . Auth::user()->name;
+    }
 
     /**
      * The attributes that are mass assignable.

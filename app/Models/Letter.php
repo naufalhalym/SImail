@@ -10,10 +10,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Letter extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    //Function to get activity logs
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            -> logOnly(['text'])
+            -> logFillable()
+            -> useLogName('Letters');
+    }
+
+    //Function to track user is doing
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return $this->name . " tetter {$eventName} by " . Auth::user()->name;
+    }
 
     /**
      * @var string[]
