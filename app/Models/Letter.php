@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use App\Enums\LetterType;
-use App\Enums\Config as ConfigEnum;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\LetterType;
 use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\LogOptions;
+use App\Enums\Config as ConfigEnum;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Letter extends Model
 {

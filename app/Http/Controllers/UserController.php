@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 use TheSeer\Tokenizer\Exception;
 use App\Enums\Config as ConfigEnum;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use Spatie\Activitylog\Models\Activity;
 use App\Http\Requests\UpdateUserRequest;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -24,10 +24,10 @@ class UserController extends Controller
      * @param Request $request
      * @return View
      */
-    public function index(Request $request, User $user): View
+    public function index(Request $request): View
     {
         // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if ($user->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'admin' || 'staff'){
             return view('pages.user', [
                 'data' => User::render($request->search),
                 'search' => $request->search,
@@ -43,10 +43,10 @@ class UserController extends Controller
      * @param StoreUserRequest $request
      * @return RedirectResponse
      */
-    public function store(StoreUserRequest $request, User $user): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
         // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if ($user->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'admin' || 'staff'){
             try {
                 $newUser = $request->validated();
                 $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
@@ -78,7 +78,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if ($user->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'admin' || 'staff'){
             try {
                 $newUser = $request->validated();
                 $newUser['is_active'] = isset($newUser['is_active']);
@@ -112,7 +112,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if ($user->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'admin' || 'staff'){
             try {
                 $user->delete();
 

@@ -16,10 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\PageController::class, 'index'])->name('home');
 
-    Route::resource('user', \App\Http\Controllers\UserController::class);
-    Route::resource('log', \App\Http\Controllers\LogController::class);
-        // ->except(['show', 'edit', 'create'])
-        // ->middleware(['role:admin', 'role:staff']);
+    Route::resource('user', \App\Http\Controllers\UserController::class)->except(['show', 'create', 'edit']);
+    Route::resource('log', \App\Http\Controllers\LogController::class)->except(['show', 'create', 'edit']);
 
     Route::get('profile', [\App\Http\Controllers\PageController::class, 'profile'])
         ->name('profile.show');
@@ -60,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('reference')->as('reference.')->middleware(['role:admin'])->group(function () {
         Route::resource('classification', \App\Http\Controllers\ClassificationController::class)->except(['show', 'create', 'edit']);
         Route::resource('status', \App\Http\Controllers\LetterStatusController::class)->except(['show', 'create', 'edit']);
+        Route::resource('division', \App\Http\Controllers\DivisionController::class)->except(['show', 'create', 'edit']);
     });
 
 });

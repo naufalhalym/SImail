@@ -106,6 +106,11 @@
                             <div data-i18n="{{ __('menu.reference.status') }}">{{ __('menu.reference.status') }}</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.division.*') ? 'active' : '' }}">
+                        <a href="{{ route('reference.division.index') }}" class="menu-link">
+                            <div data-i18n="{{ __('menu.reference.division') }}">{{ __('menu.reference.division') }}</div>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <!-- User Management -->

@@ -32,6 +32,10 @@ return [
         'type' => 'Klasifikasi',
         'description' => 'Uraian',
     ],
+    'division' => [
+        'division' => 'Divisi',
+        'description' => 'Uraian',
+    ],
     'status' => [
         'status' => 'Sifat Status',
     ],

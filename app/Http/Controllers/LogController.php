@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class LogController extends Controller
 {
-    public function index(Request $request, User $user): View
+    public function index(Request $request): View
     {
-        if ($user->role === 'admin'){
+        if (Auth::user()->role == 'admin'){
             $logs = ActivityLog::all();
             return view('pages.log.index', [
                 'logs' => $logs
