@@ -45,6 +45,7 @@ return [
         'password' => 'Kata Sandi',
         'phone' => 'Nomor Telepon',
         'position' => 'Jabatan',
+        'division' => 'Divisi',
         'role' => 'Peran',
         'is_active' => 'Masih Aktif?',
         'picture' => 'Foto Profil',

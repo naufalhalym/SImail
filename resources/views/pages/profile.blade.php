@@ -81,14 +81,21 @@
                             <div class="col-md-6 col-lg-12">
                                 <x-input-form name="name" :label="__('model.user.name')" :value="$data->name" />
                             </div>
-                            <div class="col-md-6 col-lg-12">
-                                <x-input-form name="position" :label="__('model.user.position')" :value="$data->position" />
-                            </div>
                             <div class="col-md-6">
                                 <x-input-form name="email" :label="__('model.user.email')" :value="$data->email" />
                             </div>
                             <div class="col-md-6">
                                 <x-input-form name="phone" :label="__('model.user.phone')" :value="$data->phone" />
+                            </div>
+                            <div class="col-md-6">
+                                <x-input-form name="position" :label="__('model.user.position')" :value="$data->position" />
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="division" class="form-label">Divisi</label>
+                                    <input readonly disabled type="text" class="form-control @error('division') is-invalid @enderror" id="division" name="division" value="{{ old('division', $data->division) }}" />
+                                    <span class="error invalid-feedback">{{ $errors->first('division') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-2">

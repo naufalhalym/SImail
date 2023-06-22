@@ -28,7 +28,8 @@ class StoreUserRequest extends FormRequest
             'name' => __('model.user.name'),
             'email' => __('model.user.email'),
             'phone' => __('model.user.phone'),
-            'phone' => __('model.user.position'),
+            'position' => __('model.user.position'),
+            'division' => __('model.user.division'),
         ];
     }
 
@@ -43,7 +44,8 @@ class StoreUserRequest extends FormRequest
             'name' => ['required'],
             'email' => ['required', Rule::unique('users')],
             'phone' => ['nullable'],
-            'position' => ['nullable'],
+            'position' => ['required'],
+            'division' => ['required'],
         ];
     }
 }

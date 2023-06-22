@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Config;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use TheSeer\Tokenizer\Exception;
 use App\Enums\Config as ConfigEnum;
@@ -31,6 +32,7 @@ class UserController extends Controller
             return view('pages.user', [
                 'data' => User::render($request->search),
                 'search' => $request->search,
+                'divisions' => Division::all()
             ]);
         }else {
             abort(403);

@@ -44,6 +44,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'position',
+        'division',
         'role',
         'is_active',
         'profile_picture',
