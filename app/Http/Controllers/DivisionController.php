@@ -21,7 +21,10 @@ class DivisionController extends Controller
     public function index(Request $request): View
     {
         if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
-            return view('pages.reference.division');
+            return view('pages.reference.division', [
+                'data' => Division::render($request->search),
+                'search' => $request->search,
+            ]);
         }else {
             abort(403);
         }
