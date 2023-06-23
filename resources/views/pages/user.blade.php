@@ -10,12 +10,13 @@
             $('#editModal input#phone').val($(this).data('phone'));
             $('#editModal input#email').val($(this).data('email'));
             $('#editModal input#position').val($(this).data('position'));
-            $('#editModal input#division').val($(this).data('division'));
+            $('#editModal select#division').val($(this).data('division'));
             if ($(this).data('active') == 1) {
                 $('#editModal input#is_active').attr('checked', 1)
             } else {
                 $('#editModal input#is_active').removeAttribute('checked');
             }
+            console.log($(this).data('division'));
         });
     </script>
 @endpush
@@ -176,11 +177,12 @@
                         <select class="form-select" id="division" name="division">
                             @foreach($divisions as $division)
                             {{-- <option
-                                value="{{ $division->id }}"
-                                {{ old('division') == $division->id ? 'selected' : '' }}>
+                                @selected(old('division') == $division->division)
+                                value="{{ $division->id }}">
                                 {{ $division->division }}
                             </option> --}}
-                            <option value="{{ $division->id }}" {{ old('division') == $division->id ? 'selected' : ''  }}>{{ $division->division }}</option>
+                            {{-- <option value="{{ $division->id }}" {{ old('division') == $division->division ? 'selected' : ''  }}>{{ $division->division }}</option> --}}
+                            <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
