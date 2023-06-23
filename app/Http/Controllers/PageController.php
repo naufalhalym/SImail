@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\LetterType;
-use App\Helpers\GeneralHelper;
-use App\Http\Requests\UpdateConfigRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Attachment;
-use App\Models\Config;
-use App\Models\Disposition;
-use App\Models\Letter;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\Config;
+use App\Models\Letter;
+use App\Models\Division;
+use App\Enums\LetterType;
+use App\Models\Attachment;
+use App\Models\Disposition;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Helpers\GeneralHelper;
 use JetBrains\PhpStorm\NoReturn;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateConfigRequest;
 
 class PageController extends Controller
 {
@@ -61,6 +62,7 @@ class PageController extends Controller
     {
         return view('pages.profile', [
             'data' => auth()->user(),
+            'divisions' => Division::all()
         ]);
     }
 
@@ -99,12 +101,16 @@ class PageController extends Controller
      */
     public function deactivate(): RedirectResponse
     {
-        try {
-            auth()->user()->update(['is_active' => false]);
-            Auth::logout();
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+        if (Auth::user()->role != 'Admin') {
+            try {
+                auth()->user()->update(['is_active' => false]);
+                Auth::logout();
+                return back()->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                return back()->with('error', $exception->getMessage());
+            }
+        } else {
+            abort(403);
         }
     }
 
@@ -114,9 +120,11 @@ class PageController extends Controller
      */
     public function settings(Request $request): View
     {
-        return view('pages.setting', [
-            'configs' => Config::all(),
-        ]);
+        if (Auth::user()->role === 'Admin'){
+            return view('pages.setting', [
+                'configs' => Config::all(),
+            ]);
+        }
     }
 
     /**
@@ -125,16 +133,18 @@ class PageController extends Controller
      */
     public function settingsUpdate(UpdateConfigRequest $request): RedirectResponse
     {
-        try {
-            DB::beginTransaction();
-            foreach ($request->validated() as $code => $value) {
-                Config::where('code', $code)->update(['value' => $value]);
+        if (Auth::user()->role == 'Admin'){
+            try {
+                DB::beginTransaction();
+                foreach ($request->validated() as $code => $value) {
+                    Config::where('code', $code)->update(['value' => $value]);
+                }
+                DB::commit();
+                return back()->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                DB::rollBack();
+                return back()->with('error', $exception->getMessage());
             }
-            DB::commit();
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            DB::rollBack();
-            return back()->with('error', $exception->getMessage());
         }
     }
 

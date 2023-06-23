@@ -65,9 +65,7 @@
             </ul>
         </li> --}}
 
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('menu.header.other_menu') }}</span>
-        </li>
+
         {{-- <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('gallery.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-images"></i>
@@ -88,7 +86,10 @@
                 </li>
             </ul>
         </li> --}}
-        @if(auth()->user()->role == 'admin' ||  'staff')
+        @if(Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP')
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">{{ __('menu.header.other_menu') }}</span>
+        </li>
             <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.*') ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-analyse"></i>
@@ -121,6 +122,8 @@
                 </a>
             </li>
 
+            @endif
+            @if (Auth::user()->role === 'Admin')
             <!-- Log Activity -->
             <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('log.*') ? 'active' : '' }}">
                 <a href="{{ route('log.index') }}" class="menu-link">
@@ -128,6 +131,6 @@
                     <div data-i18n="{{ __('menu.logs') }}">{{ __('menu.logs') }}</div>
                 </a>
             </li>
-        @endif
+            @endif
     </ul>
 </aside>

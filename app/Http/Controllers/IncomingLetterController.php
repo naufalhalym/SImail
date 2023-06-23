@@ -115,11 +115,11 @@ class IncomingLetterController extends Controller
                 }
             }
 
-            //creating the newsItem will cause an activity being logged
+            //creating the event will cause an activity being logged
             $activity = Activity::all()->last();
 
             $activity->description; //returns 'created'
-            $activity->subject; //returns the instance of NewsItem that was created
+            $activity->subject; //returns the instance of event that was created
             $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
 
             return redirect()
@@ -184,11 +184,11 @@ class IncomingLetterController extends Controller
                 }
             }
 
-            //updating the newsItem will cause an activity being logged
+            //updating the event will cause an activity being logged
             $activity = Activity::all()->last();
 
             $activity->description; //returns 'updated'
-            $activity->subject; //returns the instance of NewsItem that was created
+            $activity->subject; //returns the instance of event that was created
 
             return back()->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
@@ -207,7 +207,7 @@ class IncomingLetterController extends Controller
         try {
             $incoming->delete();
 
-            //deleting the newsItem will cause an activity being logged
+            //deleting the event will cause an activity being logged
             $activity = Activity::all()->last();
 
             $activity->description; //returns 'deleted'

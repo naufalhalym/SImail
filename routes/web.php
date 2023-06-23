@@ -16,23 +16,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\PageController::class, 'index'])->name('home');
 
-    Route::resource('user', \App\Http\Controllers\UserController::class)->except(['show', 'create', 'edit']);
-    Route::resource('log', \App\Http\Controllers\LogController::class)->except(['show', 'create', 'edit']);
+    Route::resource('user', \App\Http\Controllers\UserController::class)
+        ->except(['show', 'create', 'edit']);
+    Route::resource('log', \App\Http\Controllers\LogController::class)
+        ->except(['show', 'create', 'edit']);
 
     Route::get('profile', [\App\Http\Controllers\PageController::class, 'profile'])
         ->name('profile.show');
     Route::put('profile', [\App\Http\Controllers\PageController::class, 'profileUpdate'])
         ->name('profile.update');
     Route::put('profile/deactivate', [\App\Http\Controllers\PageController::class, 'deactivate'])
-        ->name('profile.deactivate')
-        ->middleware(['role:staff']);
+        ->name('profile.deactivate');
 
     Route::get('settings', [\App\Http\Controllers\PageController::class, 'settings'])
-        ->name('settings.show')
-        ->middleware(['role:admin']);
+        ->name('settings.show');
     Route::put('settings', [\App\Http\Controllers\PageController::class, 'settingsUpdate'])
-        ->name('settings.update')
-        ->middleware(['role:admin']);
+        ->name('settings.update');
 
     Route::delete('attachment', [\App\Http\Controllers\PageController::class, 'removeAttachment'])
         ->name('attachment.destroy');
@@ -40,7 +39,17 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('transaction')->as('transaction.')->group(function () {
         Route::resource('incoming', \App\Http\Controllers\IncomingLetterController::class);
         Route::resource('outgoing', \App\Http\Controllers\OutgoingLetterController::class);
-        Route::resource('{letter}/disposition', \App\Http\Controllers\DispositionController::class)->except(['show']);
+        Route::resource('{letter}/disposition', \App\Http\Controllers\DispositionController::class)
+            ->except(['show']);
+    });
+
+    Route::prefix('reference')->as('reference.')->group(function () {
+        Route::resource('classification', \App\Http\Controllers\ClassificationController::class)
+            ->except(['show', 'create', 'edit']);
+        Route::resource('status', \App\Http\Controllers\LetterStatusController::class)
+            ->except(['show', 'create', 'edit']);
+        Route::resource('division', \App\Http\Controllers\DivisionController::class)
+            ->except(['show', 'create', 'edit']);
     });
 
     // Route::prefix('agenda')->as('agenda.')->group(function () {
@@ -54,11 +63,5 @@ Route::middleware(['auth'])->group(function () {
     //     Route::get('incoming', [\App\Http\Controllers\LetterGalleryController::class, 'incoming'])->name('incoming');
     //     Route::get('outgoing', [\App\Http\Controllers\LetterGalleryController::class, 'outgoing'])->name('outgoing');
     // });
-
-    Route::prefix('reference')->as('reference.')->middleware(['role:admin'])->group(function () {
-        Route::resource('classification', \App\Http\Controllers\ClassificationController::class)->except(['show', 'create', 'edit']);
-        Route::resource('status', \App\Http\Controllers\LetterStatusController::class)->except(['show', 'create', 'edit']);
-        Route::resource('division', \App\Http\Controllers\DivisionController::class)->except(['show', 'create', 'edit']);
-    });
 
 });

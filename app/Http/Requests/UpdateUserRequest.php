@@ -15,8 +15,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return auth()->user()->role == Role::ADMIN->status() || $this->id == auth()->user()->id;
-        return true;
+        return auth()->user()->role == Role::ADMIN->status() || $this->id == auth()->user()->id;
     }
 
     /**
@@ -29,6 +28,7 @@ class UpdateUserRequest extends FormRequest
             'email' => __('model.user.email'),
             'phone' => __('model.user.phone'),
             'position' => __('model.user.position'),
+            'role' => __('model.user.role'),
             'division' => __('model.user.division'),
         ];
     }
@@ -46,7 +46,8 @@ class UpdateUserRequest extends FormRequest
             'phone' => ['nullable'],
             'is_active' => ['nullable'],
             'position' => ['required'],
-            'division' => ['required'],
+            'role' => ['required'],
+            'division' => ['nullable'],
         ];
     }
 }

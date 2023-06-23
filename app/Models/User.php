@@ -92,9 +92,9 @@ class User extends Authenticatable
         return $query->where('is_active', true);
     }
 
-    public function scopeRole($query, Role $role)
+    public function scopeRole($query, array $roles)
     {
-        return $query->where('role', $role->status());
+        return $query->whereIn('role', array_map(fn(Role $role) => $role->status(), $roles));
     }
 
     public function scopeSearch($query, $search)
@@ -111,7 +111,9 @@ class User extends Authenticatable
     {
         return $query
             ->search($search)
-            ->role(Role::STAFF)
+            ->role([Role::KETUA,
+                Role::KEPALA,
+                Role::SEKRETARIS])
             ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
             ->appends([
                 'search' => $search,

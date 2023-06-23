@@ -11,7 +11,7 @@ class LogController extends Controller
 {
     public function index(Request $request): View
     {
-        if (Auth::user()->role == 'admin'){
+        if (Auth::user()->role == 'Admin'){
             $logs = ActivityLog::all();
             return view('pages.log.index', [
                 'logs' => $logs

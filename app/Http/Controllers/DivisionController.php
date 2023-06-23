@@ -20,7 +20,7 @@ class DivisionController extends Controller
      */
     public function index(Request $request): View
     {
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             return view('pages.reference.division');
         }else {
             abort(403);
@@ -35,7 +35,7 @@ class DivisionController extends Controller
      */
     public function store(StoreDivisionRequest $request): RedirectResponse
     {
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 Division::create($request->validated());
                 return back()->with('success', __('menu.general.success'));
@@ -54,7 +54,7 @@ class DivisionController extends Controller
      */
     public function update(UpdateDivisionRequest $request, Division $division): RedirectResponse
     {
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 $division->update($request->validated());
                 return back()->with('success', __('menu.general.success'));
@@ -72,7 +72,7 @@ class DivisionController extends Controller
      */
     public function destroy(Division $division): RedirectResponse
     {
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 $division->delete();
                 return back()->with('success', __('menu.general.success'));

@@ -38,7 +38,7 @@
     <div class="row">
         <div class="col">
             {{-- Tab --}}
-            @if(auth()->user()->role == 'admin')
+            @if(auth()->user()->role == 'Admin')
             <ul class="nav nav-pills flex-column flex-md-row mb-3">
                 <li class="nav-item">
                     <a class="nav-link active" href="javascript:void(0);">{{ __('navbar.profile.profile') }}</a>
@@ -87,14 +87,38 @@
                             <div class="col-md-6">
                                 <x-input-form name="phone" :label="__('model.user.phone')" :value="$data->phone" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <x-input-form name="position" :label="__('model.user.position')" :value="$data->position" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                {{-- <div class="mb-3">
+                                    <label for="role" class="form-label">Peran</label>
+                                    <input readonly type="text" class="form-control @error('role') is-invalid @enderror" id="role" name="role" value="{{ $data->role }}" />
+                                    <span class="error invalid-feedback">{{ $errors->first('role') }}</span>
+                                </div> --}}
                                 <div class="mb-3">
-                                    <label for="division" class="form-label">Divisi</label>
-                                    <input readonly disabled type="text" class="form-control @error('division') is-invalid @enderror" id="division" name="division" value="{{ old('division', $data->division) }}" />
-                                    <span class="error invalid-feedback">{{ $errors->first('division') }}</span>
+                                    <label for="role"
+                                           class="form-label">Peran</label>
+                                    <select class="form-select" id="role" name="role">
+                                        @if (Auth::user()->role === 'Admin')
+                                        <option value="Admin" selected>Admin</option>
+                                        @endif
+                                        @foreach(["Ketua P3MP","Sekretaris","Ketua Bidang"] AS $values)
+                                        <option value="{{ $values }}" {{ $data->role == $values ? 'selected' : 'disabled' }}>{{ $values }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="division"
+                                           class="form-label">Divisi</label>
+                                    <select class="form-select" id="division" name="division">
+                                        @foreach($divisions as $division)
+                                        {{-- <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option> --}}
+                                        <option value="{{ $division->id }}" {{ $data->division == $division->id ? 'selected' : 'disabled' }}>{{ $division->division }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +131,7 @@
                 </form>
             </div>
 
-            @if(auth()->user()->role == 'staff')
+            @if(auth()->user()->role != 'Admin')
             <div class="card">
                 <h5 class="card-header">{{ __('navbar.profile.deactivate_account') }}</h5>
                 <div class="card-body">

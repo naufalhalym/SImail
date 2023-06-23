@@ -29,6 +29,7 @@ class StoreUserRequest extends FormRequest
             'email' => __('model.user.email'),
             'phone' => __('model.user.phone'),
             'position' => __('model.user.position'),
+            'role' => __('model.user.role'),
             'division' => __('model.user.division'),
         ];
     }
@@ -45,7 +46,8 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', Rule::unique('users')],
             'phone' => ['nullable'],
             'position' => ['required'],
-            'division' => ['required'],
+            'role' => ['required'],
+            'division' => ['nullable'],
         ];
     }
 }

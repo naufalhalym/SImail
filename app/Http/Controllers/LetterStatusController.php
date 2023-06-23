@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LetterStatus;
+use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreLetterStatusRequest;
 use App\Http\Requests\UpdateLetterStatusRequest;
-use App\Models\LetterStatus;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class LetterStatusController extends Controller
 {
@@ -18,10 +19,14 @@ class LetterStatusController extends Controller
      */
     public function index(Request $request): View
     {
-        return view('pages.reference.status', [
-            'data' => LetterStatus::render($request->search),
-            'search' => $request->search,
-        ]);
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            return view('pages.reference.status', [
+                'data' => LetterStatus::render($request->search),
+                'search' => $request->search,
+            ]);
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -32,11 +37,15 @@ class LetterStatusController extends Controller
      */
     public function store(StoreLetterStatusRequest $request): RedirectResponse
     {
-        try {
-            LetterStatus::create($request->validated());
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            try {
+                LetterStatus::create($request->validated());
+                return back()->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                return back()->with('error', $exception->getMessage());
+            }
+        } else {
+            abort(403);
         }
     }
 
@@ -49,11 +58,15 @@ class LetterStatusController extends Controller
      */
     public function update(UpdateLetterStatusRequest $request, LetterStatus $status): RedirectResponse
     {
-        try {
-            $status->update($request->validated());
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            try {
+                $status->update($request->validated());
+                return back()->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                return back()->with('error', $exception->getMessage());
+            }
+        } else {
+            abort(403);
         }
     }
 
@@ -65,11 +78,15 @@ class LetterStatusController extends Controller
      */
     public function destroy(LetterStatus $status): RedirectResponse
     {
-        try {
-            $status->delete();
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            try {
+                $status->delete();
+                return back()->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                return back()->with('error', $exception->getMessage());
+            }
+        } else {
+            abort(403);
         }
     }
 }

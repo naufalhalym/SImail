@@ -10,13 +10,13 @@
             $('#editModal input#phone').val($(this).data('phone'));
             $('#editModal input#email').val($(this).data('email'));
             $('#editModal input#position').val($(this).data('position'));
+            $('#editModal select#role').val($(this).data('role'));
             $('#editModal select#division').val($(this).data('division'));
             if ($(this).data('active') == 1) {
                 $('#editModal input#is_active').attr('checked', 1)
             } else {
                 $('#editModal input#is_active').removeAttribute('checked');
             }
-            console.log($(this).data('division'));
         });
     </script>
 @endpush
@@ -42,6 +42,7 @@
                     <th>{{ __('model.user.email') }}</th>
                     <th>{{ __('model.user.phone') }}</th>
                     <th>{{ __('model.user.position') }}</th>
+                    <th>{{ __('model.user.role') }}</th>
                     <th>{{ __('model.user.division') }}</th>
                     <th>{{ __('model.user.is_active') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
@@ -55,6 +56,7 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->position }}</td>
+                            <td>{{ $user->role }}</td>
                             <td>{{ $divisions->where('id', $user->division)->pluck('division')->implode('[]', '"') }}</td>
                             <td><span
                                     class="badge bg-label-primary me-1">{{  __('model.user.' . ($user->is_active ? 'active' : 'nonactive')) }}</span>
@@ -66,6 +68,7 @@
                                         data-email="{{ $user->email }}"
                                         data-phone="{{ $user->phone }}"
                                         data-position="{{ $user->position }}"
+                                        data-role="{{ $user->role }}"
                                         data-division="{{ $user->division }}"
                                         data-active="{{ $user->is_active }}"
                                         data-bs-toggle="modal"
@@ -97,6 +100,7 @@
                     <th>{{ __('model.user.email') }}</th>
                     <th>{{ __('model.user.phone') }}</th>
                     <th>{{ __('model.user.position') }}</th>
+                    <th>{{ __('model.user.role') }}</th>
                     <th>{{ __('model.user.division') }}</th>
                     <th>{{ __('model.user.is_active') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
@@ -128,14 +132,20 @@
                     <x-input-form name="phone" :label="__('model.user.phone')"/>
                     <x-input-form name="position" :label="__('model.user.position')"/>
                     <div class="mb-3">
+                        <label for="role"
+                               class="form-label">Peran</label>
+                        <select class="form-select" id="role" name="role">
+                            @foreach(["Ketua P3MP", "Sekretaris", "Ketua Bidang"] AS $values)
+                            <option value="{{ $values }}" {{ old('role') == $values ? 'selected' : '' }}>{{ $values }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="division"
-                               class="form-label">Division</label>
+                               class="form-label">Divisi</label>
                         <select class="form-select" id="division" name="division">
                             @foreach($divisions as $division)
-                                <option
-                                    value="{{ $division->id }}"
-                                    {{ $division->division }}>
-                                </option>
+                            <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -171,6 +181,15 @@
                     <x-input-form name="email" :label="__('model.user.email')" type="email"/>
                     <x-input-form name="phone" :label="__('model.user.phone')"/>
                     <x-input-form name="position" :label="__('model.user.position')"/>
+                    <div class="mb-3">
+                        <label for="role"
+                               class="form-label">Peran</label>
+                        <select class="form-select" id="role" name="role">
+                            @foreach(["Ketua P3MP", "Sekretaris", "Ketua Bidang"] AS $values)
+                            <option value="{{ $values }}" {{ old('role') == $values ? 'selected' : '' }}>{{ $values }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label for="division"
                                class="form-label">Divisi</label>

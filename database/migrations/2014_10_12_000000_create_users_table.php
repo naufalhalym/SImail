@@ -20,9 +20,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->nullable();
-            $table->string('role')->default('staff');
+            $table->enum('role', ['Admin', 'Ketua P3MP', 'Sekretaris', 'Ketua Bidang']);
             $table->string('position');
-            $table->string('division');
+            $table->string('division')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('profile_picture')->nullable();
             $table->rememberToken();

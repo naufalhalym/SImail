@@ -27,8 +27,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             return view('pages.user', [
                 'data' => User::render($request->search),
                 'search' => $request->search,
@@ -47,18 +46,17 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 $newUser = $request->validated();
                 $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
                 User::create($newUser);
 
-                //creating the newsItem will cause an activity being logged
+                //creating the event will cause an activity being logged
                 $activity = Activity::all()->last();
 
                 $activity->description; //returns 'created'
-                $activity->subject; //returns the instance of NewsItem that was created
+                $activity->subject; //returns the instance of event that was created
                 $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
 
                 return back()->with('success', __('menu.general.success'));
@@ -79,8 +77,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 $newUser = $request->validated();
                 $newUser['is_active'] = isset($newUser['is_active']);
@@ -89,11 +86,11 @@ class UserController extends Controller
                 $user->update($newUser);
 
 
-                //updating the newsItem will cause an activity being logged
+                //updating the event will cause an activity being logged
                 $activity = Activity::all()->last();
 
                 $activity->description; //returns 'updated'
-                $activity->subject; //returns the instance of NewsItem that was created
+                $activity->subject; //returns the instance of event that was created
 
                 return back()->with('success', __('menu.general.success'));
             } catch (\Throwable $exception) {
@@ -113,12 +110,11 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
-        // $this->authorize('isAdmin') || $this->authorize('isStaff');
-        if (Auth::user()->role === 'admin' || 'staff'){
+        if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP'){
             try {
                 $user->delete();
 
-                //deleting the newsItem will cause an activity being logged
+                //deleting the event will cause an activity being logged
                 $activity = Activity::all()->last();
 
                 $activity->description; //returns 'deleted'
