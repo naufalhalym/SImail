@@ -12,7 +12,7 @@ class LogController extends Controller
     public function index(Request $request): View
     {
         if (Auth::user()->role == 'Admin'){
-            return view('pages.log.index', [
+            return view('pages.activityLog', [
                 'data' => ActivityLog::render($request->search),
                 'search' => $request->search,
             ]);

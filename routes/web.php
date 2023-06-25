@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('attachment', [\App\Http\Controllers\PageController::class, 'removeAttachment'])
         ->name('attachment.destroy');
 
+    // Route::delete('/division/{division}', 'DivisionController@destroy')
+    //     ->name('division.destroy');
+
+
     Route::prefix('transaction')->as('transaction.')->group(function () {
         Route::resource('incoming', \App\Http\Controllers\IncomingLetterController::class);
         Route::resource('outgoing', \App\Http\Controllers\OutgoingLetterController::class);
