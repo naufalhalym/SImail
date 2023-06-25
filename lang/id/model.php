@@ -55,6 +55,11 @@ return [
         'nonactive' => 'Nonaktif',
         'reset_password' => 'Setel ulang Kata Sandi menjadi bawaan?',
     ],
+    'log' => [
+        'log_name' =>  'Aktivitas Table',
+        'description' => 'Detail Aktivitas',
+        'created_at' => 'Dibuat Pada'
+    ],
     'general' => [
         'created_at' => 'Dibuat pada',
         'updated_at' => 'Diperbarui pada',
