@@ -20,6 +20,7 @@ class StoreDivisionRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'code' => __('model.division.code'),
             'division' => __('model.division.division'),
             'description' => __('model.division.description'),
         ];
@@ -35,6 +36,7 @@ class StoreDivisionRequest extends FormRequest
         return [
             'division' => ['required', Rule::unique('divisions')],
             'description'=> ['nullable'],
+            'code'=> ['required'],
         ];
     }
 }

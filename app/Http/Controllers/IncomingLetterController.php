@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use App\Models\Letter;
+use App\Models\Division;
 use App\Enums\LetterType;
 use App\Models\Attachment;
 use Illuminate\Http\Request;
 use App\Models\Classification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
 use Spatie\Activitylog\Models\Activity;
 use App\Http\Requests\StoreLetterRequest;
 use App\Http\Requests\UpdateLetterRequest;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Support\Facades\Auth;
 
 class IncomingLetterController extends Controller
 {
@@ -31,6 +32,7 @@ class IncomingLetterController extends Controller
         return view('pages.transaction.incoming.index', [
             'data' => Letter::incoming()->render($request->search),
             'search' => $request->search,
+            'divisions' => Division::all()
         ]);
     }
 
@@ -40,17 +42,17 @@ class IncomingLetterController extends Controller
      * @param Request $request
      * @return View
      */
-    public function agenda(Request $request): View
-    {
-        return view('pages.transaction.incoming.agenda', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->render($request->search),
-            'search' => $request->search,
-            'since' => $request->since,
-            'until' => $request->until,
-            'filter' => $request->filter,
-            'query' => $request->getQueryString(),
-        ]);
-    }
+    // public function agenda(Request $request): View
+    // {
+    //     return view('pages.transaction.incoming.agenda', [
+    //         'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->render($request->search),
+    //         'search' => $request->search,
+    //         'since' => $request->since,
+    //         'until' => $request->until,
+    //         'filter' => $request->filter,
+    //         'query' => $request->getQueryString(),
+    //     ]);
+    // }
 
     /**
      * @param Request $request
@@ -62,7 +64,7 @@ class IncomingLetterController extends Controller
         $letter = __('menu.agenda.incoming_letter');
         $title = App::getLocale() == 'id' ? "$agenda $letter" : "$letter $agenda";
         return view('pages.transaction.incoming.print', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->get(),
+            'data' => Letter::incoming()->get(),
             'search' => $request->search,
             'since' => $request->since,
             'until' => $request->until,
@@ -79,9 +81,14 @@ class IncomingLetterController extends Controller
      */
     public function create(): View
     {
-        return view('pages.transaction.incoming.create', [
-            'classifications' => Classification::all(),
-        ]);
+        if(Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            return view('pages.transaction.incoming.create', [
+                'classifications' => Classification::all(),
+                'divisions' => Division::all()
+            ]);
+        }else {
+            abort(403);
+        }
     }
 
     /**
@@ -92,41 +99,45 @@ class IncomingLetterController extends Controller
      */
     public function store(StoreLetterRequest $request): RedirectResponse
     {
-        try {
-            $user = auth()->user();
+        if(Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
+            try {
+                $user = auth()->user();
 
-            if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
-            $newLetter = $request->validated();
-            $newLetter['user_id'] = $user->id;
-            $letter = Letter::create($newLetter);
-            if ($request->hasFile('attachments')) {
-                foreach ($request->attachments as $attachment) {
-                    $extension = $attachment->getClientOriginalExtension();
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
-                    $filename = time() . '-'. $attachment->getClientOriginalName();
-                    $filename = str_replace(' ', '-', $filename);
-                    $attachment->storeAs('public/attachments', $filename);
-                    Attachment::create([
-                        'filename' => $filename,
-                        'extension' => $extension,
-                        'user_id' => $user->id,
-                        'letter_id' => $letter->id,
-                    ]);
+                if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
+                $newLetter = $request->validated();
+                $newLetter['user_id'] = $user->id;
+                $letter = Letter::create($newLetter);
+                if ($request->hasFile('attachments')) {
+                    foreach ($request->attachments as $attachment) {
+                        $extension = $attachment->getClientOriginalExtension();
+                        if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
+                        $filename = time() . '-'. $attachment->getClientOriginalName();
+                        $filename = str_replace(' ', '-', $filename);
+                        $attachment->storeAs('public/attachments', $filename);
+                        Attachment::create([
+                            'filename' => $filename,
+                            'extension' => $extension,
+                            'user_id' => $user->id,
+                            'letter_id' => $letter->id,
+                        ]);
+                    }
                 }
+
+                //creating the event will cause an activity being logged
+                $activity = Activity::all()->last();
+
+                $activity->description; //returns 'created'
+                $activity->subject; //returns the instance of event that was created
+                $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
+
+                return redirect()
+                    ->route('transaction.incoming.index')
+                    ->with('success', __('menu.general.success'));
+            } catch (\Throwable $exception) {
+                return back()->with('error', $exception->getMessage());
             }
-
-            //creating the event will cause an activity being logged
-            $activity = Activity::all()->last();
-
-            $activity->description; //returns 'created'
-            $activity->subject; //returns the instance of event that was created
-            $activity->changes; //returns ['attributes' => ['name' => 'original name', 'text' => 'Lorum']];
-
-            return redirect()
-                ->route('transaction.incoming.index')
-                ->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+        }else {
+            abort(403);
         }
     }
 
@@ -140,7 +151,14 @@ class IncomingLetterController extends Controller
     {
         return view('pages.transaction.incoming.show', [
             'data' => $incoming->load(['classification', 'user', 'attachments']),
+            'divisions' => Division::all()
         ]);
+        // dd($incoming->load(['classification', 'user', 'attachments']));
+        // $incoming = Letter::show($id);
+        // $data = $incoming->load(['classification', 'user', 'attachments']);
+        // $divisions = Division::all();
+
+        // return view('pages.transaction.incoming.show', compact('data', 'divisions'));
     }
 
     /**
@@ -154,6 +172,7 @@ class IncomingLetterController extends Controller
         return view('pages.transaction.incoming.edit', [
             'data' => $incoming,
             'classifications' => Classification::all(),
+            'divisions' => Division::all()
         ]);
     }
 

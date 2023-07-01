@@ -2,7 +2,7 @@
 
 return [
     'letter' => [
-        'agenda_number' => 'Nomor Agenda',
+        'division' => 'Divisi',
         'from' => 'Pengirim',
         'to' => 'Penerima',
         'reference_number' => 'Nomor Surat',
@@ -34,6 +34,7 @@ return [
     ],
     'division' => [
         'division' => 'Divisi',
+        'code' => 'Kode Divisi',
         'description' => 'Uraian',
     ],
     'status' => [

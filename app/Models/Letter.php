@@ -38,7 +38,7 @@ class Letter extends Model
      */
     protected $fillable = [
         'reference_number',
-        'agenda_number',
+        'division',
         'from',
         'to',
         'letter_date',
@@ -111,7 +111,7 @@ class Letter extends Model
         return $query->when($search, function($query, $find) {
             return $query
                 ->where('reference_number', $find)
-                ->orWhere('agenda_number', $find)
+                ->orWhere('division', $find)
                 ->orWhere('from', 'LIKE', $find . '%')
                 ->orWhere('to', 'LIKE', $find . '%');
         });
@@ -119,23 +119,45 @@ class Letter extends Model
 
     public function scopeRender($query, $search)
     {
-        return $query
-            ->with(['attachments', 'classification'])
-            ->search($search)
-            ->latest('letter_date')
-            ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
-            ->appends([
-                'search' => $search,
-            ]);
+        $divisionId = auth()->user()->division;
+        $userRole = auth()->user()->role;
+        if ($userRole == 'Admin' || $userRole == 'Ketua P3MP') {
+            return $query
+                ->with(['attachments', 'classification'])
+                ->search($search)
+                ->latest('letter_date')
+                ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
+                ->appends([
+                    'search' => $search,
+                ]);
+        } else {
+            return $query
+                ->with(['attachments', 'classification'])
+                ->search($search)
+                ->latest('letter_date')
+                ->where('division', $divisionId)
+                ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
+                ->appends([
+                    'search' => $search,
+                ]);
+        }
+        // return $query
+        //     ->with(['attachments', 'classification'])
+        //     ->search($search)
+        //     ->latest('letter_date')
+        //     ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
+        //     ->appends([
+        //         'search' => $search,
+        //     ]);
     }
 
-    public function scopeAgenda($query, $since, $until, $filter)
-    {
-        return $query
-            ->when($since && $until && $filter, function ($query, $condition) use ($since, $until, $filter) {
-                return $query->whereBetween(DB::raw('DATE(' . $filter . ')'), [$since, $until]);
-            });
-    }
+    // public function scopeAgenda($query, $since, $until, $filter)
+    // {
+    //     return $query
+    //         ->when($since && $until && $filter, function ($query, $condition) use ($since, $until, $filter) {
+    //             return $query->whereBetween(DB::raw('DATE(' . $filter . ')'), [$since, $until]);
+    //         });
+    // }
 
     /**
      * @return BelongsTo

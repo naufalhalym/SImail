@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use App\Models\Letter;
+use App\Models\Division;
 use App\Enums\LetterType;
 use App\Models\Attachment;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ class OutgoingLetterController extends Controller
         return view('pages.transaction.outgoing.index', [
             'data' => Letter::outgoing()->render($request->search),
             'search' => $request->search,
+            'divisions' => Division::all()
         ]);
     }
 
@@ -80,6 +82,7 @@ class OutgoingLetterController extends Controller
     {
         return view('pages.transaction.outgoing.create', [
             'classifications' => Classification::all(),
+            'divisions' => Division::all()
         ]);
     }
 
@@ -139,6 +142,7 @@ class OutgoingLetterController extends Controller
     {
         return view('pages.transaction.outgoing.show', [
             'data' => $outgoing->load(['classification', 'user', 'attachments']),
+            'divisions' => Division::all()
         ]);
     }
 
@@ -153,6 +157,7 @@ class OutgoingLetterController extends Controller
         return view('pages.transaction.outgoing.edit', [
             'data' => $outgoing,
             'classifications' => Classification::all(),
+            'divisions' => Division::all()
         ]);
     }
 

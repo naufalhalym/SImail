@@ -39,6 +39,7 @@ return [
         'create' => 'Tambah Baru',
         'view' => 'Lihat Detail',
         'edit' => 'Edit',
+        'back' => 'Kembali',
         'delete' => 'Hapus',
         'print' => 'Cetak',
         'upload' => 'Unggah',

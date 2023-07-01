@@ -20,6 +20,7 @@ class UpdateDivisionRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'code' => __('model.division.code'),
             'division' => __('model.division.division'),
             'description' => __('model.division.description'),
         ];
@@ -35,6 +36,7 @@ class UpdateDivisionRequest extends FormRequest
         return [
             'division' => ['required', Rule::unique('divisions')->ignore($this->id)],
             'description'=> ['nullable'],
+            'code'=> ['required'],
         ];
     }
 }

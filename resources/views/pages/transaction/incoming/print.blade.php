@@ -60,7 +60,7 @@
 <table>
     <thead>
     <tr>
-        <th>{{ __('model.letter.agenda_number') }}</th>
+        <th>{{ __('model.letter.division') }}</th>
         <th>{{ __('model.letter.reference_number') }}</th>
         <th>{{ __('model.letter.from') }}</th>
         <th>{{ __('model.letter.letter_date') }}</th>
@@ -71,7 +71,7 @@
     <tbody>
     @foreach($data as $letter)
         <tr>
-            <td>{{ $letter->agenda_number }}</td>
+            <td>{{ $letter->division }}</td>
             <td>{{ $letter->reference_number }}</td>
             <td>{{ $letter->from }}</td>
             <td>{{ $letter->formatted_letter_date }}</td>

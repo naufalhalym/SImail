@@ -6,6 +6,7 @@
             const id = $(this).data('id');
             $('#editModal form').attr('action', '{{ route('reference.division.index') }}/' + id);
             $('#editModal input:hidden#id').val(id);
+            $('#editModal input#code').val($(this).data('code'));
             $('#editModal input#division').val($(this).data('division'));
             $('#editModal input#description').val($(this).data('description'));
         });
@@ -30,6 +31,7 @@
                 <thead>
                 <tr>
                     <th>{{ __('model.division.division') }}</th>
+                    <th>{{ __('model.division.code') }}</th>
                     <th>{{ __('model.division.description') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
                 </tr>
@@ -39,11 +41,13 @@
                     @foreach($data as $division)
                         <tr>
                             <td>{{ $division->division }}</td>
+                            <td>{{ $division->code }}</td>
                             <td>{{ $division->description }}</td>
                             <td>
                                 <button class="btn btn-info btn-sm btn-edit"
                                         data-id="{{ $division->id }}"
                                         data-division="{{ $division->division }}"
+                                        data-code="{{ $division->code }}"
                                         data-description="{{ $division->description }}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editModal">
@@ -71,6 +75,7 @@
                 <tfoot class="table-border-bottom-0">
                 <tr>
                     <th>{{ __('model.division.division') }}</th>
+                    <th>{{ __('model.division.code') }}</th>
                     <th>{{ __('model.division.description') }}</th>
                     <th>{{ __('menu.general.action') }}</th>
                 </tr>
@@ -96,6 +101,7 @@
                 </div>
                 <div class="modal-body">
                     <x-input-form name="division" :label="__('model.division.division')"/>
+                    <x-input-form name="code" :label="__('model.division.code')"/>
                     <x-input-form name="description" :label="__('model.division.description')"/>
                 </div>
                 <div class="modal-footer">
@@ -126,6 +132,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="id" value="">
                     <x-input-form name="division" :label="__('model.division.division')"/>
+                    <x-input-form name="code" :label="__('model.division.code')"/>
                     <x-input-form name="description" :label="__('model.division.description')"/>
                 </div>
                 <div class="modal-footer">

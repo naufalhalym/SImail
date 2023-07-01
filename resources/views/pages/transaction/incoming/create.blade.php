@@ -3,6 +3,7 @@
 @section('content')
     <x-breadcrumb
         :values="[__('menu.transaction.menu'), __('menu.transaction.incoming_letter'), __('menu.general.create')]">
+        <a href="{{ route('transaction.incoming.index') }}" class="btn btn-primary">{{ __('menu.general.back') }}</a>
     </x-breadcrumb>
 
     <div class="card mb-4">
@@ -17,7 +18,15 @@
                     <x-input-form name="from" :label="__('model.letter.from')"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')"/>
+                    <div class="mb-3">
+                        <label for="division"
+                               class="form-label">Divisi</label>
+                        <select class="form-select" id="division" name="division">
+                            @foreach($divisions as $division)
+                            <option value="{{ $division->id }}">{{ $division->division }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
                     <x-input-form name="letter_date" :label="__('model.letter.letter_date')" type="date"/>
