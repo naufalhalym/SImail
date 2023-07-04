@@ -99,12 +99,16 @@ class IncomingLetterController extends Controller
      */
     public function store(StoreLetterRequest $request): RedirectResponse
     {
+        // dd($request);
+        // dd($request);
         if(Auth::user()->role === 'Admin' || Auth::user()->role === 'Ketua P3MP') {
             try {
                 $user = auth()->user();
 
                 if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
-                $newLetter = $request->validated();
+                $newLetter = $request->except(['division']);
+                $newLetter['reference_number'] = (string)$request['division'] . (string)$request['reference_number'];
+                // dd($newLetter['reference_number']);
                 $newLetter['user_id'] = $user->id;
                 $letter = Letter::create($newLetter);
                 if ($request->hasFile('attachments')) {
