@@ -123,7 +123,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             var referenceNumberInput = document.getElementById('reference_number');
             var divisionId = document.getElementById('division').value;
-            console.log(divisionId);
             var referenceNumber = referenceNumberInput.value.trim();
 
             // Check if the last sentence contains the division ID
