@@ -106,6 +106,7 @@ class IncomingLetterController extends Controller
                 if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
                 $newLetter = $request->validated();
                 $newLetter['user_id'] = $user->id;
+                $newLetter['reference_number'] .= $request->input('division');
                 $letter = Letter::create($newLetter);
                 if ($request->hasFile('attachments')) {
                     foreach ($request->attachments as $attachment) {
@@ -187,6 +188,8 @@ class IncomingLetterController extends Controller
     {
         try {
             $incoming->update($request->validated());
+            $incoming->reference_number .= $request->input('division');
+            $incoming->save();
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
@@ -209,7 +212,7 @@ class IncomingLetterController extends Controller
             $activity->description; //returns 'updated'
             $activity->subject; //returns the instance of event that was created
 
-            return back()->with('success', __('menu.general.success'));
+            return redirect()->route('transaction.incoming.index')->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());
         }

@@ -145,7 +145,7 @@
                                class="form-label">Divisi</label>
                         <select class="form-select" id="division" name="division">
                             @foreach($divisions as $division)
-                            <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option>
+                            <option value="{{ $division->code }}" @if (old('division') == $division->code) selected @endif>{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -201,7 +201,7 @@
                                 {{ $division->division }}
                             </option> --}}
                             {{-- <option value="{{ $division->id }}" {{ old('division') == $division->division ? 'selected' : ''  }}>{{ $division->division }}</option> --}}
-                            <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option>
+                            <option value="{{ $division->code }}" @if (old('division') == $division->code) selected @endif>{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -100,6 +100,7 @@ class OutgoingLetterController extends Controller
             if ($request->type != LetterType::OUTGOING->type()) throw new \Exception(__('menu.transaction.outgoing_letter'));
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
+            $newLetter['reference_number'] .= $request->input('division');
             $letter = Letter::create($newLetter);
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
@@ -194,7 +195,7 @@ class OutgoingLetterController extends Controller
             $activity->description; //returns 'updated'
             $activity->subject; //returns the instance of event that was created
 
-            return back()->with('success', __('menu.general.success'));
+            return redirect()->route('transaction.outgoing.index')->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());
         }

@@ -17,7 +17,7 @@
                     <small class="text-black">
                         {{ $letter->type == 'incoming' ? $letter->from : $letter->to }} |
                         <span
-                            class="text-secondary">{{ __('model.letter.division') }}:</span> {{ $divisions->where('id', $letter->division)->pluck('division')->implode('[]', '"') }}
+                            class="text-secondary">{{ __('model.letter.division') }}:</span> {{ $divisions->where('code', $letter->division)->pluck('division')->implode('[]', '"') }}
                         |
                         {{ $letter->classification?->type }}
                     </small>

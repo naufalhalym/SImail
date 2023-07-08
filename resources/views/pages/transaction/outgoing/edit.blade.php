@@ -26,7 +26,7 @@
                                class="form-label">Divisi</label>
                         <select class="form-select" id="division" name="division">
                             @foreach($divisions as $division)
-                            <option value="{{ $division->id }}" {{ $data->division == $division->id ? 'selected' : '' }}>{{ $division->division }}</option>
+                            <option value="{{ $division->code }}" {{ $data->division == $division->code ? 'selected' : '' }}>{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -106,6 +106,22 @@
                     $('form#form-to-remove-attachment').submit();
                 }
             })
+        });
+
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            var referenceNumberInput = document.getElementById('reference_number');
+            var divisionId = document.getElementById('division').value;
+            var referenceNumber = referenceNumberInput.value.trim();
+
+            // Check if the last sentence contains the division ID
+            if (referenceNumber.endsWith(divisionId)) {
+                // Remove the division ID from the reference number
+                referenceNumber = referenceNumber.replace(new RegExp(divisionId + '$'), '').trim();
+
+                // Update the value of the reference number input
+                referenceNumberInput.value = referenceNumber;
+            }
         });
     </script>
 @endpush

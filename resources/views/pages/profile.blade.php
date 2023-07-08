@@ -116,7 +116,7 @@
                                     <select class="form-select" id="division" name="division">
                                         @foreach($divisions as $division)
                                         {{-- <option value="{{ $division->id }}" @if (old('division') == $division->id) selected @endif>{{ $division->division }}</option> --}}
-                                        <option value="{{ $division->id }}" {{ $data->division == $division->id ? 'selected' : 'disabled' }}>{{ $division->division }}</option>
+                                        <option value="{{ $division->code }}" {{ $data->division == $division->code ? 'selected' : 'disabled' }}>{{ $division->division }}</option>
                                         @endforeach
                                     </select>
                                 </div>

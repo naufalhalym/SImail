@@ -112,7 +112,7 @@
                     <dd class="col-sm-9">{{ $data->reference_number }}</dd>
 
                     <dt class="col-sm-3">{{ __('model.letter.division') }}</dt>
-                    <dd class="col-sm-9">{{ $divisions->where('id', $data->division)->pluck('division')->implode('[]', '"') }}</dd>
+                    <dd class="col-sm-9">{{ $divisions->where('code', $data->division)->pluck('division')->implode('[]', '"') }}</dd>
 
                     <dt class="col-sm-3">{{ __('model.classification.code') }}</dt>
                     <dd class="col-sm-9">{{ $data->classification_code }}</dd>

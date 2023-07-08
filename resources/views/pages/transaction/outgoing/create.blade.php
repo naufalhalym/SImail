@@ -23,7 +23,7 @@
                                class="form-label">Divisi</label>
                         <select class="form-select" id="division" name="division">
                             @foreach($divisions as $division)
-                            <option value="{{ $division->id }}">{{ $division->division }}</option>
+                            <option value="{{ $division->code }}">{{ $division->division }}</option>
                             @endforeach
                         </select>
                     </div>
