@@ -67,7 +67,7 @@
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="{{ route('home') }}" class="app-brand-link gap-2">
-                            <!-- <img src="{{ asset('logo-black.png') }}" alt="{{ config('app.name') }}" srcset="" width="75px"> -->
+                            <span class="app-brand-text demo text-black fw-bolder fs-1">{{ config('app.name') }}</span>
                         </a>
                     </div>
 
